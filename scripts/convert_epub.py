@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "ebooklib>=0.18",
+#     "beautifulsoup4>=4.11.0",
+#     "lxml>=4.9.0",
+# ]
+# ///
 """
 Convert EPUB to Markdown for NotebookLM upload.
 Uses BeautifulSoup for robust HTML parsing.
+
+Usage:
+    uv run scripts/convert_epub.py <epub_file> [output_md]
 """
 import sys
 import re

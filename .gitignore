@@ -24,7 +24,11 @@ wheels/
 venv/
 ENV/
 env/
-.venv
+.venv/
+.uv/
+
+# uv cache
+uv.lock
 
 # IDE
 .vscode/
@@ -36,15 +40,12 @@ env/
 # Playwright
 .playwright/
 
-# User-specific files
-# Protect sensitive data
+# User-specific files (protect sensitive data)
 *.json
-!package.json
-!.python-version
-!skill.yaml
+!pyproject.toml
 
 # Z-Library session data (IMPORTANT!)
-~/.zlibrary/
+.zlibrary/
 *.storage_state.json
 browser_profile/
 
@@ -59,3 +60,7 @@ Thumbs.db
 *.tmp
 *.temp
 /tmp/
+
+# Downloads
+~/Downloads/*.pdf
+~/Downloads/*.epub

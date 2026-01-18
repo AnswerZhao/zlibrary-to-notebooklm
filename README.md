@@ -1,302 +1,287 @@
-# 📚 Z-Library to NotebookLM
+# Z-Library to NotebookLM
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+[English](#english) | [简体中文](#简体中文)
 
-> Automatically download books from Z-Library and upload them to Google NotebookLM with one command.
+---
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+<a name="english"></a>
+# Z-Library to NotebookLM
+
+> Automatically download books from Z-Library and upload to Google NotebookLM with one command.
+
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![Claude Skill](https://img.shields.io/badge/Claude-Skill-success.svg)](https://claude.ai/claude-code)
 
----
+## ⚠️ Disclaimer
 
-## ⚠️ Important Disclaimer
-
-**This project is for educational, research, and technical demonstration purposes only. Please strictly comply with local laws and copyright regulations. Use only for:**
-
-- ✅ Resources you have legal access to
-- ✅ Public domain or open-source licensed documents (e.g., arXiv, Project Gutenberg)
-- ✅ Content you personally own or have authorization to use
-
-**The author does not encourage or support any form of copyright infringement and assumes no legal liability. Use at your own risk.**
-
-**Please respect intellectual property rights and support authorized reading!**
+**For educational, research, and technical demonstration purposes only.** Please comply with local laws and copyright regulations. Use only for resources you have legal access to.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 **One-time Login, Forever Use** - Similar to `notebooklm login` experience
-- 📥 **Smart Download** - Prioritizes PDF (preserves formatting), auto-fallback to EPUB → Markdown
-- 📦 **Smart Chunking** - Large files auto-split (>350k words) for reliable CLI upload
-- 🤖 **Fully Automated** - Complete workflow with a single command
-- 🎯 **Format Adaptive** - Automatically detects and processes multiple formats (PDF, EPUB, MOBI, etc.)
-- 📊 **Visual Progress** - Real-time display of download and conversion progress
+- 🔐 **One-time login** - Save Z-Library session, reuse forever
+- 📥 **Smart download** - PDF preferred (preserves formatting), EPUB auto-converted
+- 📦 **Auto chunking** - Large files (>350k words) automatically split
+- 🤖 **Fully automated** - Complete workflow with single command
+- 🎯 **Format adaptive** - Supports PDF, EPUB, and more
 
-## 🎯 Use as Claude Skill (Recommended)
+## Prerequisites
 
-### Installation
+This skill requires:
+
+- **Python 3.10+** - Required for scripts execution
+- **uv** - Modern Python package manager (auto-installs dependencies)
+
+The setup script will automatically verify these requirements.
+
+## Quick Start
+
+### 1. Install the Skill
 
 ```bash
-# 1. Navigate to Claude Skills directory
-cd ~/.claude/skills  # Windows: %APPDATA%\Claude\skills
+# Clone to Claude Skills directory
+cd ~/.claude/skills
+git clone https://github.com/your-repo/zlibrary-to-notebooklm.git
+cd zlibrary-to-notebooklm
 
-# 2. Clone the repository
-git clone https://github.com/zstmfhy/zlibrary-to-notebooklm.git zlib-to-notebooklm
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 3. Complete initial login
-cd zlib-to-notebooklm
-python3 scripts/login.py
+# Run setup (one-time) - installs Python dependencies and tools
+uv run scripts/setup.py
+
+# Complete login (one-time)
+uv run scripts/login.py    # Z-Library
+notebooklm login           # NotebookLM
 ```
 
-### Usage
+### 2. Use in Claude Code
 
-After installation, simply tell Claude Code:
+Just provide a Z-Library URL:
 
-```text
-Use zlib-to-notebooklm skill to process this Z-Library link:
-https://zh.zlib.li/book/25314781/aa05a1/book-title
+```
+Upload this book to NotebookLM: https://zh.zlib.li/book/12345/...
 ```
 
 Claude will automatically:
+- Check environment and prompt setup if needed
+- Download the book (PDF preferred, EPUB converted)
+- Upload to NotebookLM
+- Return the Notebook ID with follow-up questions
 
-- Download the book (prioritizing PDF)
-- Create NotebookLM notebook
-- Upload the file
-- Return notebook ID
-- Suggest follow-up questions
+### Example Response
+
+```
+Download successful!
+Notebook ID: cd5d140c-ca3c-4e30-a3b1-69f32bfbed00
+
+You can now ask:
+- "What are the core ideas in this book?"
+- "Summarize Chapter 3"
+```
+
+## What This Skill Does
+
+```
+Z-Library URL → Download → Convert (if needed) → Upload to NotebookLM → Return Notebook ID
+```
+
+## File Structure (Optimized)
+
+```
+zlibrary-to-notebooklm/
+├── SKILL.md                    # Core skill definition (concise)
+├── pyproject.toml              # Python dependency management
+├── references/
+│   └── TROUBLESHOOTING.md      # Detailed troubleshooting (lazy-loaded)
+└── scripts/                    # Executable scripts
+    ├── upload.py               # Main workflow
+    ├── login.py                # Z-Library login
+    ├── setup.py                # Dependency installer
+    ├── convert_epub.py         # EPUB converter
+    ├── config.py               # Configuration
+    └── logger.py               # Logging utilities
+```
+
+## Optimizations Made
+
+This version is optimized from [zstmfhy/zlibrary-to-notebooklm](https://github.com/zstmfhy/zlibrary-to-notebooklm):
+
+### 1. Dependency Management
+- ✅ Added `pyproject.toml` for unified Python dependency management
+- ✅ Removed `requirements.txt` (redundant with uv)
+- ✅ Python dependencies auto-installed by uv on first run
+
+### 2. NotebookLM CLI
+- ✅ Switched from npm `notebooklm-cli` to Python `notebooklm-py`
+- ✅ Updated upload commands to use `--notebook` and `--type file` parameters
+- ✅ Removed `notebooklm use` commands (no longer needed)
+
+### 3. File Structure (Skill Best Practices)
+- ✅ Removed auxiliary files: README.md, INSTALL.md, LICENSE, etc.
+- ✅ Removed docs/ and tests/ directories (not needed for runtime)
+- ✅ Streamlined SKILL.md: 140 lines → 58 lines
+- ✅ Added references/TROUBLESHOOTING.md for progressive disclosure
+
+### 4. Environment Checks
+- ✅ Added `check_environment()` in upload.py
+- ✅ Auto-detects missing dependencies and login status
+- ✅ Clear error messages with fix suggestions
+
+### 5. First-Time Experience
+- ✅ One-command setup: `uv run scripts/setup.py`
+- ✅ Automated login prompts
+- ✅ Reduced token waste through progressive disclosure
+
+## Requirements
+
+- **uv** - Modern Python package manager
+- **Python 3.10+** - Auto-detected by uv
+- **NotebookLM CLI** (notebooklm-py) - Installed by setup script
+
+## License
+
+MIT License
 
 ---
 
-## 🛠️ Traditional Installation
+<a name="简体中文"></a>
+# Z-Library 到 NotebookLM
 
-### 1. Install Dependencies
+> 一键将 Z-Library 书籍自动下载并上传到 Google NotebookLM
+
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
+[![Claude Skill](https://img.shields.io/badge/Claude-Skill-success.svg)](https://claude.ai/claude-code)
+
+## ⚠️ 免责声明
+
+**仅供学习、研究和技术演示用途。** 请严格遵守当地法律法规和版权规定，仅用于您拥有合法访问权限的资源。
+
+---
+
+## 特性
+
+- 🔐 **一次登录，永久使用** - 保存 Z-Library 会话状态
+- 📥 **智能下载** - 优先 PDF（保留排版），EPUB 自动转换
+- 📦 **自动分块** - 大文件（>35万词）自动分割
+- 🤖 **全自动化** - 一条命令完成整个流程
+- 🎯 **格式自适应** - 支持 PDF、EPUB 等多种格式
+
+## 系统要求
+
+本 Skill 需要：
+
+- **Python 3.10+** - 脚本执行所需
+- **uv** - 现代 Python 包管理器（自动安装依赖）
+
+安装脚本会自动验证这些要求。
+
+## 快速开始
+
+### 1. 安装 Skill
 
 ```bash
-# Clone repository
-git clone https://github.com/zstmfhy/zlibrary-to-notebooklm.git
+# 克隆到 Claude Skills 目录
+cd ~/.claude/skills
+git clone https://github.com/your-repo/zlibrary-to-notebooklm.git
 cd zlibrary-to-notebooklm
 
-# Install Python dependencies
-pip install playwright ebooklib
+# 安装 uv（如未安装）
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install Playwright browser
-playwright install chromium
+# 运行安装脚本（仅需一次）- 安装 Python 依赖和工具
+uv run scripts/setup.py
+
+# 完成登录（仅需一次）
+uv run scripts/login.py    # Z-Library
+notebooklm login           # NotebookLM
 ```
 
-### 2. Login to Z-Library (One-time Only)
+### 2. 在 Claude Code 中使用
 
-```bash
-python3 scripts/login.py
+只需提供 Z-Library URL：
+
+```
+上传这本书到 NotebookLM: https://zh.zlib.li/book/12345/...
 ```
 
-**Steps:**
-1. Browser will automatically open and visit Z-Library
-2. Complete login in the browser
-3. Return to terminal and press **ENTER**
-4. Session saved!
+Claude 将自动：
+- 检查环境并在需要时提示设置
+- 下载书籍（优先 PDF，EPUB 自动转换）
+- 上传到 NotebookLM
+- 返回笔记本 ID 和后续问题建议
 
-### 3. Download and Upload Books
+### 示例响应
 
-```bash
-python3 scripts/upload.py "https://zh.zlib.li/book/..."
+```
+下载成功！
+笔记本 ID: cd5d140c-ca3c-4e30-a3b1-69f32bfbed00
+
+你可以问：
+- "这本书的核心观点是什么？"
+- "总结第3章"
 ```
 
-**Automatically completes:**
+## 工作流程
 
-- ✅ Login using saved session
-- ✅ Download PDF (preserves formatting)
-- ✅ Fallback to EPUB → Markdown
-- ✅ Smart chunking for large files (>350k words)
-- ✅ Create NotebookLM notebook
-- ✅ Upload content
-- ✅ Return notebook ID
-
-## 📖 Usage Examples
-
-### Basic Usage
-
-```bash
-# Download single book
-python3 scripts/upload.py "https://zh.zlib.li/book/12345/..."
+```
+Z-Library URL → 下载 → 转换（如需要）→ 上传到 NotebookLM → 返回笔记本 ID
 ```
 
-### Batch Processing
+## 文件结构（已优化）
 
-```bash
-# Batch download multiple books
-for url in "url1" "url2" "url3"; do
-    python3 scripts/upload.py "$url"
-done
 ```
-
-### Using NotebookLM
-
-```bash
-# After upload, use the notebook
-notebooklm use <returned-notebook-id>
-
-# Start asking questions
-notebooklm ask "What are the core concepts of this book?"
-notebooklm ask "Summarize Chapter 3"
-```
-
-## 🔄 Workflow
-
-```text
-Z-Library URL
-    ↓
-1. Launch browser (using saved session)
-    ↓
-2. Visit book page
-    ↓
-3. Smart format selection:
-   - Priority: PDF (preserves formatting)
-   - Fallback: EPUB (convert to Markdown)
-   - Other formats (auto-convert)
-    ↓
-4. Download to ~/Downloads
-    ↓
-5. Format processing:
-   - PDF → Use directly
-   - EPUB → Convert to Markdown
-   - Check file size → Auto-chunk if >350k words
-    ↓
-6. Create NotebookLM notebook
-    ↓
-7. Upload content (chunked files uploaded individually)
-    ↓
-8. Return notebook ID ✅
-```
-
-## 📁 Project Structure
-
-```text
 zlibrary-to-notebooklm/
-├── SKILL.md              # Core Skill definition (required)
-├── README.md             # Project documentation
-├── README.zh-CN.md       # Chinese documentation
-├── LICENSE               # MIT License
-├── package.json          # npm config (for Claude Code skill)
-├── skill.yaml            # Skill configuration
-├── requirements.txt      # Python dependencies
-├── scripts/              # Executable scripts (official standard)
-│   ├── login.py         # Login script
-│   ├── upload.py        # Download + Upload script
-│   └── convert_epub.py  # EPUB conversion tool
-├── docs/                 # Documentation
-│   ├── WORKFLOW.md      # Workflow details
-│   └── TROUBLESHOOTING.md # Troubleshooting guide
-└── INSTALL.md            # Installation guide
+├── SKILL.md                    # 技能核心定义（精简）
+├── pyproject.toml              # Python 依赖管理
+├── references/
+│   └── TROUBLESHOOTING.md      # 详细故障排除（按需加载）
+└── scripts/                    # 可执行脚本
+    ├── upload.py               # 主流程
+    ├── login.py                # Z-Library 登录
+    ├── setup.py                # 依赖安装器
+    ├── convert_epub.py         # EPUB 转换器
+    ├── config.py               # 配置
+    └── logger.py               # 日志工具
 ```
 
-## 🔧 Configuration
+## 优化内容
 
-All configurations are saved in `~/.zlibrary/` directory:
+本版本基于 [zstmfhy/zlibrary-to-notebooklm](https://github.com/zstmfhy/zlibrary-to-notebooklm) 进行了优化：
 
-```text
-~/.zlibrary/
-├── storage_state.json    # Login session (cookies)
-├── browser_profile/      # Browser data
-└── config.json          # Account config (backup)
-```
+### 1. 依赖管理
+- ✅ 新增 `pyproject.toml` 统一管理 Python 依赖
+- ✅ 移除 `requirements.txt`（与 uv 重复）
+- ✅ Python 依赖由 uv 首次运行时自动安装
 
-## 🛠️ Dependencies
+### 2. NotebookLM CLI
+- ✅ 从 npm `notebooklm-cli` 切换到 Python `notebooklm-py`
+- ✅ 更新上传命令，使用 `--notebook` 和 `--type file` 参数
+- ✅ 移除 `notebooklm use` 命令（不再需要）
 
-- **Python 3.8+**
-- **playwright** - Browser automation
-- **ebooklib** - EPUB file processing
-- **NotebookLM CLI** - Google NotebookLM command-line tool
+### 3. 文件结构（技能最佳实践）
+- ✅ 移除辅助文件：README.md、INSTALL.md、LICENSE 等
+- ✅ 移除 docs/ 和 tests/ 目录（运行时不需要）
+- ✅ 精简 SKILL.md：140 行 → 58 行
+- ✅ 新增 references/TROUBLESHOOTING.md 实现渐进式披露
 
-## 📝 Command Reference
+### 4. 环境检查
+- ✅ 在 upload.py 中添加 `check_environment()` 函数
+- ✅ 自动检测缺失依赖和登录状态
+- ✅ 清晰的错误提示和修复建议
 
-### Login
+### 5. 首次使用体验
+- ✅ 一键安装：`uv run scripts/setup.py`
+- ✅ 自动登录提示
+- ✅ 通过渐进式披露减少 token 消耗
 
-```bash
-python3 scripts/login.py
-```
+## 系统要求
 
-### Upload
+- **uv** - 现代 Python 包管理器
+- **Python 3.10+** - 由 uv 自动检测
+- **NotebookLM CLI** (notebooklm-py) - 由安装脚本处理
 
-```bash
-python3 scripts/upload.py <Z-Library URL>
-```
+## 许可证
 
-### Check Session Status
-
-```bash
-ls -lh ~/.zlibrary/storage_state.json
-```
-
-### Re-login
-
-```bash
-rm ~/.zlibrary/storage_state.json
-python3 scripts/login.py
-```
-
-## 📊 NotebookLM Limits
-
-This project is optimized for NotebookLM's actual limitations:
-
-### Official Limits
-- **File Size**: 200MB per file
-- **Words per Source**: 500,000 words
-
-### Practical Recommendations (CLI Tool)
-- **Safe Word Count**: Maximum 350,000-380,000 words per file
-- **Reason**: NotebookLM CLI tool has timeout and API limitations with large files
-
-### Our Solution
-✅ **Automatic File Chunking**:
-- When EPUB is converted to Markdown, the script automatically detects word count
-- Files exceeding 350,000 words are automatically split into multiple smaller files
-- Each chunk is uploaded individually to the same NotebookLM notebook
-- Smart chapter-based splitting preserves content integrity
-
-**Example**:
-```bash
-📊 Word count: 2,700,000
-⚠️  File exceeds 350k words (NotebookLM CLI limit)
-📊 File too large, starting split...
-   Total words: 2,700,000
-   Max per chunk: 350,000 words
-   ✅ Part 1/8: 342,000 words
-   ✅ Part 2/8: 338,000 words
-   ...
-📦 Detected 8 file chunks
-```
-
-### Why 350k Words?
-- Official limit is 500k words, but CLI tools tend to timeout near this limit
-- 350k words is a tested safe value for reliable uploads
-- Web interface can handle larger files directly, but CLI tools require chunking
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-## 🙏 Acknowledgments
-
-- [Z-Library](https://zh.zlib.li/) - World's largest digital library
-- [Google NotebookLM](https://notebooklm.google.com/) - AI-powered note-taking tool
-- [Playwright](https://playwright.dev/) - Powerful browser automation tool
-
-## 📮 Contact
-
-- GitHub Issues: [Submit issues](https://github.com/zstmfhy/zlibrary-to-notebooklm/issues)
-- Discussions: [GitHub Discussions](https://github.com/zstmfhy/zlibrary-to-notebooklm/discussions)
-
----
-
-**⭐ If this project helps you, please give it a Star!**
+MIT License

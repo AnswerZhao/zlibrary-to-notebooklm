@@ -1,46 +1,64 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "playwright>=1.40.0",
+# ]
+# ///
 """
-Z-Library Login - 一次性登录，保存会话状态
+Z-Library Login - One-time login, save session state.
 
-类似 notebooklm login 的工作方式
+Similar to how `notebooklm login` works.
+
+Usage:
+    uv run scripts/login.py
 """
 
-import asyncio
 import sys
 from pathlib import Path
 
 try:
     from playwright.sync_api import sync_playwright
 except ImportError:
-    print("❌ Playwright 未安装")
-    print("请运行: pip install playwright")
+    print("Playwright not installed")
+    print("Please run: pip install playwright")
     sys.exit(1)
 
+# Import local modules
+from config import (
+    CONFIG_DIR,
+    STORAGE_STATE_FILE,
+    BROWSER_PROFILE_DIR,
+    ZLIBRARY_URL,
+    DIR_PERMISSIONS,
+    FILE_PERMISSIONS,
+    ensure_config_dir,
+    get_script_dir,
+)
+from logger import get_logger
 
-def zlibrary_login():
-    """Z-Library 登录并保存会话"""
+logger = get_logger(__name__)
 
-    config_dir = Path.home() / ".zlibrary"
-    config_dir.mkdir(parents=True, exist_ok=True)
-    config_dir.chmod(0o700)
 
-    storage_state = config_dir / "storage_state.json"
+def zlibrary_login() -> None:
+    """Login to Z-Library and save session."""
 
-    print("="*70)
-    print("🔐 Z-Library 登录")
-    print("="*70)
+    config_dir = ensure_config_dir()
+    storage_state = STORAGE_STATE_FILE
+
+    logger.section("Z-Library Login")
     print("")
-    print("说明:")
-    print("  1. 浏览器会自动打开并访问 Z-Library")
-    print("  2. 请手动完成登录（如果需要）")
-    print("  3. 登录成功后，回到终端按 ENTER")
-    print("  4. 会话状态将被保存，后续无需再次登录")
+    print("Instructions:")
+    print("  1. Browser will automatically open and visit Z-Library")
+    print("  2. Please complete login manually (if needed)")
+    print("  3. After successful login, return to terminal and press ENTER")
+    print("  4. Session state will be saved, no need to login again")
     print("")
 
     with sync_playwright() as p:
-        print("🚀 启动浏览器...")
+        logger.info("Launching browser...")
         browser = p.chromium.launch_persistent_context(
-            user_data_dir=str(config_dir / "browser_profile"),
+            user_data_dir=str(BROWSER_PROFILE_DIR),
             headless=False,
             args=['--disable-blink-features=AutomationControlled']
         )
@@ -48,41 +66,40 @@ def zlibrary_login():
         page = browser.pages[0] if browser.pages else browser.new_page()
 
         try:
-            print("📖 访问 Z-Library...")
-            page.goto("https://zh.zlib.li/", wait_until='domcontentloaded', timeout=30000)
+            logger.info("Visiting Z-Library...")
+            page.goto(ZLIBRARY_URL, wait_until='domcontentloaded', timeout=30000)
 
             print("")
-            print("="*70)
-            print("📋 操作步骤:")
-            print("="*70)
-            print("1. 在浏览器中完成登录（如果未登录）")
-            print("2. 等待看到 Z-Library 主页")
-            print("3. 回到终端，按 ENTER 继续")
-            print("="*70)
+            logger.section("Action Steps")
+            print("1. Complete login in the browser (if not logged in)")
+            print("2. Wait until you see the Z-Library homepage")
+            print("3. Return to terminal and press ENTER to continue")
+            print("=" * 70)
             print("")
 
-            input("✅ 已完成登录？按 ENTER 保存会话... ")
+            input("Login completed? Press ENTER to save session... ")
 
-            # 保存会话状态
+            # Save session state
             browser.storage_state(path=str(storage_state))
-            storage_state.chmod(0o600)
+            storage_state.chmod(FILE_PERMISSIONS)
 
             print("")
-            print("✅ 会话已保存！")
-            print(f"📁 位置: {storage_state}")
+            logger.success("Session saved!")
+            print(f"Location: {storage_state}")
             print("")
-            print("💡 现在可以运行自动化脚本了：")
-            print("   python3 /tmp/auto_download_and_upload.py <Z-Library URL>")
+            print("You can now run the automation script:")
+            script_dir = get_script_dir()
+            print(f"   python3 {script_dir}/upload.py <Z-Library URL>")
             print("")
 
         except Exception as e:
-            print(f"❌ 错误: {e}")
+            logger.error(f"Error: {e}")
         finally:
             browser.close()
 
 
-def main():
-    """主函数"""
+def main() -> None:
+    """Main entry point."""
     zlibrary_login()
 
 
