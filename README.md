@@ -106,39 +106,32 @@ zlibrary-to-notebooklm/
 
 ## Optimizations Made
 
-This version is optimized from [zstmfhy/zlibrary-to-notebooklm](https://github.com/zstmfhy/zlibrary-to-notebooklm):
+This version is optimized from [zstmfhy/zlibrary-to-notebooklm](https://github.com/zstmfhy/zlibrary-to-notebooklm) with focus on **user experience improvements**:
 
-### 1. Dependency Management
-- ✅ Added `pyproject.toml` for unified Python dependency management
-- ✅ Removed `requirements.txt` (redundant with uv)
-- ✅ Python dependencies auto-installed by uv on first run
+### 💡 Better User Experience
 
-### 2. NotebookLM CLI
-- ✅ Switched from npm `notebooklm-cli` to Python `notebooklm-py`
-- ✅ Updated upload commands to use `--notebook` and `--type file` parameters
-- ✅ Removed `notebooklm use` commands (no longer needed)
+- ✅ **Simplified setup** - One command (`uv run scripts/setup.py`) handles everything
+- ✅ **Auto-detection** - Script checks dependencies and login status automatically
+- ✅ **Clear error messages** - Specific fix suggestions instead of cryptic errors
+- ✅ **Faster uploads** - Switched to notebooklm-py for more reliable uploads
+- ✅ **Reduced token usage** - Progressive disclosure design loads only what's needed
 
-### 3. File Structure (Skill Best Practices)
-- ✅ Removed auxiliary files: README.md, INSTALL.md, LICENSE, etc.
-- ✅ Removed docs/ and tests/ directories (not needed for runtime)
-- ✅ Streamlined SKILL.md: 140 lines → 58 lines
-- ✅ Added references/TROUBLESHOOTING.md for progressive disclosure
+### 🔧 Technical Improvements
 
-### 4. Environment Checks
-- ✅ Added `check_environment()` in upload.py
-- ✅ Auto-detects missing dependencies and login status
-- ✅ Clear error messages with fix suggestions
+- ✅ **Unified dependency management** - `pyproject.toml` + `uv` replaces npm
+- ✅ **Removed redundant files** - Deleted auxiliary docs per skill best practices
+- ✅ **Streamlined SKILL.md** - 140 lines → 58 lines for faster loading
+- ✅ **Environment validation** - Pre-flight checks prevent failed uploads
 
-### 5. First-Time Experience
-- ✅ One-command setup: `uv run scripts/setup.py`
-- ✅ Automated login prompts
-- ✅ Reduced token waste through progressive disclosure
+### 📦 What Changed
 
-## Requirements
-
-- **uv** - Modern Python package manager
-- **Python 3.10+** - Auto-detected by uv
-- **NotebookLM CLI** (notebooklm-py) - Installed by setup script
+| Before | After |
+|--------|-------|
+| npm notebooklm-cli | Python notebooklm-py |
+| requirements.txt | pyproject.toml (uv-managed) |
+| README.md, docs/, tests/ | Removed (skill best practices) |
+| Manual setup | Auto-setup with one command |
+| Cryptic errors | Clear error messages with fixes |
 
 ## License
 
@@ -248,39 +241,32 @@ zlibrary-to-notebooklm/
 
 ## 优化内容
 
-本版本基于 [zstmfhy/zlibrary-to-notebooklm](https://github.com/zstmfhy/zlibrary-to-notebooklm) 进行了优化：
+本版本基于 [zstmfhy/zlibrary-to-notebooklm](https://github.com/zstmfhy/zlibrary-to-notebooklm) 进行了优化，**专注于用户体验改善**：
 
-### 1. 依赖管理
-- ✅ 新增 `pyproject.toml` 统一管理 Python 依赖
-- ✅ 移除 `requirements.txt`（与 uv 重复）
-- ✅ Python 依赖由 uv 首次运行时自动安装
+### 💡 更好的用户体验
 
-### 2. NotebookLM CLI
-- ✅ 从 npm `notebooklm-cli` 切换到 Python `notebooklm-py`
-- ✅ 更新上传命令，使用 `--notebook` 和 `--type file` 参数
-- ✅ 移除 `notebooklm use` 命令（不再需要）
+- ✅ **简化安装** - 一条命令 (`uv run scripts/setup.py`) 完成所有设置
+- ✅ **自动检测** - 脚本自动检查依赖和登录状态
+- ✅ **清晰的错误提示** - 具体的修复建议，而非晦涩的错误信息
+- ✅ **更快的上传** - 切换到 notebooklm-py，上传更稳定
+- ✅ **减少 token 消耗** - 渐进式披露设计，只加载需要的内容
 
-### 3. 文件结构（技能最佳实践）
-- ✅ 移除辅助文件：README.md、INSTALL.md、LICENSE 等
-- ✅ 移除 docs/ 和 tests/ 目录（运行时不需要）
-- ✅ 精简 SKILL.md：140 行 → 58 行
-- ✅ 新增 references/TROUBLESHOOTING.md 实现渐进式披露
+### 🔧 技术改进
 
-### 4. 环境检查
-- ✅ 在 upload.py 中添加 `check_environment()` 函数
-- ✅ 自动检测缺失依赖和登录状态
-- ✅ 清晰的错误提示和修复建议
+- ✅ **统一依赖管理** - `pyproject.toml` + `uv` 替代 npm
+- ✅ **移除冗余文件** - 遵循 skill 最佳实践删除辅助文档
+- ✅ **精简 SKILL.md** - 140 行 → 58 行，加载更快
+- ✅ **环境验证** - 预检查防止上传失败
 
-### 5. 首次使用体验
-- ✅ 一键安装：`uv run scripts/setup.py`
-- ✅ 自动登录提示
-- ✅ 通过渐进式披露减少 token 消耗
+### 📦 主要变化
 
-## 系统要求
-
-- **uv** - 现代 Python 包管理器
-- **Python 3.10+** - 由 uv 自动检测
-- **NotebookLM CLI** (notebooklm-py) - 由安装脚本处理
+| 之前 | 之后 |
+|------|------|
+| npm notebooklm-cli | Python notebooklm-py |
+| requirements.txt | pyproject.toml (uv 管理) |
+| README.md, docs/, tests/ | 已删除（skill 最佳实践） |
+| 手动设置 | 一键自动设置 |
+| 晦涩错误 | 清晰的错误提示和修复建议 |
 
 ## 许可证
 
