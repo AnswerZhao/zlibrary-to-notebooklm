@@ -42,7 +42,7 @@ The setup script will automatically verify these requirements.
 ```bash
 # Clone to Claude Skills directory
 cd ~/.claude/skills
-git clone https://github.com/your-repo/zlibrary-to-notebooklm.git
+git clone https://github.com/AnswerZhao/zlibrary-to-notebooklm.git
 cd zlibrary-to-notebooklm
 
 # Install uv if not already installed
@@ -184,7 +184,7 @@ MIT License
 ```bash
 # 克隆到 Claude Skills 目录
 cd ~/.claude/skills
-git clone https://github.com/your-repo/zlibrary-to-notebooklm.git
+git clone https://github.com/AnswerZhao/zlibrary-to-notebooklm.git
 cd zlibrary-to-notebooklm
 
 # 安装 uv（如未安装）
